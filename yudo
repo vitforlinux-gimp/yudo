@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+ 
+if [ -e /usr/bin/yad ]; then
+    PASSWD="$(yad --center --entry --entry-label "Password" --hide-text --image=dialog-password-symbolic.symbolic --text="Authentication needed for $USER" --title="YUDO - yad + sudo")"
+fi
+ 
+if ! [ -z "$PASSWD" ]; then
+    echo "$PASSWD" | sudo -S "$@"
+fi
+ 
+if [ $? = 1 ]; then 
+    if [ -e /usr/bin/yad ]; then
+        PASSWD="$(yad  --center --entry --entry-label "Password" --hide-text --image=dialog-password-symbolic.symbolic --text="Wrong password, retry" --title="YUDO - yad + sudo")"
+    fi
+    echo "$PASSWD" | sudo -S "$@"
+fi
+exit 0
